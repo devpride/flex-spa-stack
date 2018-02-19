@@ -1,0 +1,6 @@
+.idea
+/vendor/
+
+#you should change this lines if you want to rename app dirs
+backend-app/
+frontend-app/

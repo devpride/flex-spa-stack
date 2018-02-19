@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  php:
+    build: php
+    ports:
+      - 9000:9000
+    links:
+      - mysql:${MYSQL_HOST}
+      - redis:${REDIS_HOST}
+      - memcached:${MEMCACHED_HOST}
+      - elasticsearch:${ELASTICSEARCH_HOST}
+      - rabbitmq:${RABBITMQ_HOST}
+    volumes:
+      - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
+      - ${FRONTEND_PATH}:/var/www/flex-spa/frontend-app
+    environment:
+      APP_ENV: ${APP_ENV}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      MEMCACHED_HOST: ${MEMCACHED_HOST}
+      MEMCACHED_PORT: ${MEMCACHED_PORT}
+      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST}
+      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+  nginx:
+    build: nginx
+    ports:
+      - ${APP_PORT}:80
+    links:
+      - php
+    volumes:
+      - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
+      - ${FRONTEND_PATH}:/var/www/flex-spa/frontend-app
+      - ./logs/nginx/:/var/log/nginx
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./.data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 3306:3306
+
+  redis:
+    image: redis:alpine
+    ports:
+      - ${REDIS_PORT}:6379
+
+  memcached:
+    image: memcached:alpine
+    ports:
+      - ${MEMCACHED_PORT}:11211
+
+  elasticsearch:
+    image: elasticsearch:alpine
+    ports:
+      - ${ELASTICSEARCH_PORT}:9200
+      - 9300:9300 #node communication
+
+  rabbitmq:
+    image: rabbitmq:3.7.3-management-alpine
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - 15672:15672 #management listener
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
