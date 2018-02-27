@@ -78,3 +78,13 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+  phpmemadmin:
+    build: phpmemadmin
+    ports:
+      - 1935:80
+    links:
+      - memcached:${MEMCACHED_HOST}
+    volumes:
+      - ./phpmemadmin/application:/var/www/phpmemadmin.dev
+
