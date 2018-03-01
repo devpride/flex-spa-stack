@@ -1,4 +1,5 @@
 .idea
+.env
 /vendor/
 
 #you should change this lines if you want to rename app dirs

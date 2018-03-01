@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libmemcached-dev
 
 ADD phpmemadmin.dev.conf /etc/apache2/sites-available/
+ADD composer.json /var/www/phpmemadmin/
 RUN a2ensite phpmemadmin.dev
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -18,4 +19,4 @@ RUN "date"
 
 RUN pecl install memcached
 
-WORKDIR /var/www/phpmemadmin.dev
+WORKDIR /var/www/phpmemadmin
