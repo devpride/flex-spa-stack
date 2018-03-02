@@ -15,7 +15,7 @@ services:
       - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
       - ${FRONTEND_PATH}:/var/www/flex-spa/frontend-app
     environment:
-      APP_ENV: ${APP_ENV}
+      CI_STAGE: ${CI_STAGE}
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
@@ -82,10 +82,21 @@ services:
   phpmemadmin:
     build: builds/phpmemadmin
     ports:
-      - 1935:80
+      - ${PHPMEMADMIN_PORT}:80
     environment:
       MEMCACHED_HOST: ${MEMCACHED_HOST}
       MEMCACHED_PORT: ${MEMCACHED_PORT}
     links:
       - memcached:${MEMCACHED_HOST}
 
+  phpredisadmin:
+    build: builds/phpredisadmin
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+      - REDIS_1_HOST=${REDIS_HOST}
+      - REDIS_1_PORT=${REDIS_PORT}
+    links:
+      - redis:${REDIS_HOST}
+    ports:
+      - ${PHPREDISADMIN_PORT}:80
