@@ -43,12 +43,12 @@ services:
     volumes:
       - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
       - ${FRONTEND_PATH}:/var/www/flex-spa/frontend-app
-      - ./volumes/nginx/logs:/var/log/nginx
+      - ./log/nginx:/var/log/nginx
 
   mysql:
     image: mysql:5.7
     volumes:
-      - ./volumes/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -120,7 +120,7 @@ services:
       - 8126:8126 #statsd admin port
       - 2003:2003 #graphite data port
     volumes:
-      - ./volumes/graphite/log:/opt/graphite/storage/log
-      - ./volumes/graphite/whisper:/opt/graphite/storage/whisper
-      - ./volumes/grafana/data:/opt/grafana/data
-      - ./volumes/supervisor/log:/var/log/supervisor
+      - ./data/whisper:/opt/graphite/storage/whisper
+      - ./data/grafana:/opt/grafana/data
+      - ./log/graphite:/opt/graphite/storage/log
+      - ./log/supervisor:/var/log/supervisor
