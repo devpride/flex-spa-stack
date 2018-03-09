@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   php:
@@ -34,6 +34,7 @@ services:
       RABBITMQ_USER: ${RABBITMQ_USER}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
       MAILER_URL: ${MAILER_URL}
+      SENTRY_DSN: ${SENTRY_DSN}
 
   nginx:
     build: builds/nginx
@@ -125,3 +126,64 @@ services:
       - ./data/grafana:/opt/grafana/data
       - ./log/graphite:/opt/graphite/storage/log
       - ./log/supervisor:/var/log/supervisor
+
+  sentry:
+    restart: unless-stopped
+    image: sentry:8.22-onbuild
+    environment:
+      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
+      SENTRY_MEMCACHED_HOST: sentry_memcached
+      SENTRY_REDIS_HOST: sentry_redis
+      SENTRY_POSTGRES_HOST: sentry_postgres
+      SENTRY_EMAIL_HOST: sentry_smtp
+    volumes:
+      - ./data/sentry:/var/lib/sentry/files
+
+  sentry_memcached:
+    restart: unless-stopped
+    image: memcached:1.4
+
+  sentry_redis:
+    restart: unless-stopped
+    image: redis:3.2-alpine
+
+  sentry_postgres:
+    restart: unless-stopped
+    image: postgres:9.5
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  sentry_smtp:
+    restart: unless-stopped
+    image: tianon/exim4
+
+  sentry_web:
+    restart: unless-stopped
+    extends: sentry
+    links:
+      - sentry_memcached
+      - sentry_redis
+      - sentry_postgres
+      - sentry_smtp
+    ports:
+      - ${SENTRY_PORT}:9000
+
+  sentry_cron:
+    restart: unless-stopped
+    extends: sentry
+    links:
+      - sentry_memcached
+      - sentry_redis
+      - sentry_postgres
+      - sentry_smtp
+    command: run cron
+
+  sentry_worker:
+    restart: unless-stopped
+    extends: sentry
+    links:
+      - sentry_memcached
+      - sentry_redis
+      - sentry_postgres
+      - sentry_smtp
+    command: run worker
