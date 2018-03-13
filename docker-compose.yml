@@ -12,6 +12,7 @@ services:
       - elasticsearch:${ELASTICSEARCH_HOST}
       - rabbitmq:${RABBITMQ_HOST}
       - grafana:${STATSD_HOST}
+      - sentry_web:${SENTRY_HOST}
     volumes:
       - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
       - ${FRONTEND_PATH}:/var/www/flex-spa/frontend-app
