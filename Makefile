@@ -18,7 +18,7 @@ volume_dirs :
 
 repos :
 	@if [ ! -d backend-app ]; then git clone https://github.com/devpride/flex-spa-backend.git backend-app; fi;
-	@if [ ! -d frontend-app ]; then git clone https://github.com/devpride/flex-spa-frontend.git frontend-app; fi;
+	@if [ ! -d frontend-app ]; then git clone https://github.com/devpride/react-universally.git frontend-app; fi;
 
 envs :
 	@if [ ! -f .env ]; then cp .env.dist .env; fi;
