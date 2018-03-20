@@ -13,7 +13,7 @@ RUN rm /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
 RUN "date"
 
-RUN docker-php-ext-install pdo pdo_mysql bcmath
+RUN docker-php-ext-install pdo pdo_mysql bcmath zip
 
 RUN pecl install xdebug
 RUN pecl install memcached

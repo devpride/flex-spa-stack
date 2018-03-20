@@ -51,26 +51,29 @@ hosts_down :
 	# remove all flex-spa hosts
 	./bin/remove_host.sh flex-spa.dev
 
-up : volume_dirs envs hosts_up repos
+up : volume_dirs envs hosts_up repos tests
 	sudo docker-compose up --build -d
 
 dependencies :
 	# install dependencies for backend app
-	sudo docker-compose exec -T php composer install
+	sudo docker-compose exec -T backend composer install
 
 clean :
-	sudo docker-compose exec php php bin/console doctrine:schema:drop --force
+	sudo docker-compose exec backend php bin/console doctrine:schema:drop --force
 
 data :
 	# generate db schema migration and migrate it
-	sudo docker-compose exec -T php php bin/console doctrine:migrations:diff
-	sudo docker-compose exec -T php php bin/console doctrine:migrations:migrate
+	sudo docker-compose exec -T backend php bin/console doctrine:migrations:diff
+	sudo docker-compose exec -T backend php bin/console doctrine:migrations:migrate
 	# load demo fixtures to database
-	sudo docker-compose exec -T php php bin/console doctrine:fixtures:load
+	sudo docker-compose exec -T backend php bin/console doctrine:fixtures:load
 	# populate mysql data to elastic indexes according to app mappings
-	sudo docker-compose exec -T php php bin/console fos:elastica:populate
+	sudo docker-compose exec -T backend php bin/console fos:elastica:populate
 	#init sentry db
 	sudo docker-compose run --rm sentry_web upgrade
+
+tests :
+	sudo docker-compose exec -T backend php bin/phpunit
 
 down : hosts_down
 	sudo docker-compose down
