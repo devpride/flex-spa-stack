@@ -51,7 +51,7 @@ hosts_down :
 	# remove all flex-spa hosts
 	./bin/remove_host.sh flex-spa.dev
 
-up : volume_dirs envs hosts_up repos tests
+up : volume_dirs envs hosts_up repos
 	sudo docker-compose up --build -d
 
 dependencies :
@@ -75,8 +75,16 @@ data :
 tests :
 	sudo docker-compose exec -T backend php bin/phpunit
 
+jwt :
+	sudo docker-compose exec -T backend openssl genrsa -out config/jwt/private.pem -aes256 4096
+	sudo docker-compose exec -T backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+
 down : hosts_down
 	sudo docker-compose down
+
+re :
+	sudo docker-compose stop $(CONTAINER)
+	sudo docker-compose up --build -d $(CONTAINER)
 
 shell :
 	sudo docker-compose exec $(CONTAINER) /bin/bash

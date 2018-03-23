@@ -35,6 +35,7 @@ services:
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
       MAILER_URL: ${MAILER_URL}
       SENTRY_DSN: ${SENTRY_DSN}
+      API_JWT_PASSPHRASE: ${API_JWT_PASSPHRASE}
 
   frontend:
     build: builds/frontend
