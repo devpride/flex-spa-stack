@@ -83,13 +83,13 @@ down : hosts_down
 	sudo docker-compose down
 
 re :
-	sudo docker-compose stop $(CONTAINER)
-	sudo docker-compose up --build -d $(CONTAINER)
+	sudo docker-compose stop $(C)
+	sudo docker-compose up --build -d $(C)
 
 shell :
-	sudo docker-compose exec $(CONTAINER) /bin/bash
+	sudo docker-compose exec $(C) /bin/bash
 
 tail :
-	sudo docker-compose logs -f $(CONTAINER)
+	sudo docker-compose logs -f $(C)
 
 .PHONY: volume_dirs repos envs hosts_up hosts_down up data down shell tail
