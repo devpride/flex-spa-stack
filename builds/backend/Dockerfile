@@ -3,6 +3,7 @@ FROM php:7.1-fpm
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    cron \
     libz-dev \
     libmemcached-dev \
     python-setuptools
@@ -23,6 +24,9 @@ RUN easy_install supervisor
 
 ADD ./supervisord.conf /etc/supervisord.conf
 RUN mkdir -p /etc/supervisord
+
+ADD crontab /etc/cron.d/backend-cron
+RUN chmod 0644 /etc/cron.d/backend-cron
 
 RUN docker-php-ext-enable xdebug
 

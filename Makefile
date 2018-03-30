@@ -14,6 +14,7 @@ volume_dirs :
 		data/whisper \
 		log/graphite/webapp \
 		log/nginx \
+		log/cron \
 		log/supervisor
 
 repos :

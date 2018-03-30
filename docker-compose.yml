@@ -58,6 +58,19 @@ services:
       - ./log/supervisor:/var/log/supervisor
     command: bash -c 'cp /var/www/flex-spa/backend-app/config/workers/* /etc/supervisord/ && supervisord'
 
+  backend_cron:
+    restart: unless-stopped
+    extends: backend
+    links:
+      - mysql:${MYSQL_HOST}
+      - redis:${REDIS_HOST}
+      - memcached:${MEMCACHED_HOST}
+      - elasticsearch:${ELASTICSEARCH_HOST}
+    volumes:
+      - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
+      - ./log/cron:/var/log
+    command: bash -c 'cron && tail -f /var/log/backend-cron.log'
+
   frontend:
     build: builds/frontend
     volumes:
