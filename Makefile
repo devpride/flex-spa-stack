@@ -59,17 +59,23 @@ dependencies :
 	# install dependencies for backend app
 	sudo docker-compose exec -T backend composer install
 
+nuclear :
+	sudo docker rm $(docker ps -a -q)
+	sudo docker rmi $(docker images -q)
+	sudo docker volume prune
+
 clean :
-	sudo docker-compose exec backend php bin/console doctrine:schema:drop --force
+	sudo docker-compose exec backend_web rm -f src/Migrations/*.php
+	sudo docker-compose exec backend_web php bin/console doctrine:schema:drop --force
 
 data :
 	# generate db schema migration and migrate it
-	sudo docker-compose exec -T backend php bin/console doctrine:migrations:diff
-	sudo docker-compose exec -T backend php bin/console doctrine:migrations:migrate
+#	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:diff
+#	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:migrate
 	# load demo fixtures to database
-	sudo docker-compose exec -T backend php bin/console doctrine:fixtures:load
+	sudo docker-compose exec -T backend_web php bin/console doctrine:fixtures:load
 	# populate mysql data to elastic indexes according to app mappings
-	sudo docker-compose exec -T backend php bin/console fos:elastica:populate
+	sudo docker-compose exec -T backend_web php bin/console fos:elastica:populate
 	#init sentry db
 	sudo docker-compose run --rm sentry_web upgrade
 
@@ -77,8 +83,8 @@ tests :
 	sudo docker-compose exec -T backend php bin/phpunit
 
 jwt :
-	sudo docker-compose exec -T backend openssl genrsa -out config/jwt/private.pem -aes256 4096
-	sudo docker-compose exec -T backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+	sudo docker-compose exec backend openssl genrsa -out config/jwt/private.pem -aes256 4096
+	sudo docker-compose exec backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 down : hosts_down
 	sudo docker-compose down

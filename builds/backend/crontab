@@ -1,1 +1,1 @@
-* * * * * echo 'Cron command executed' > /var/log/backend-cron.log
+*/5 * * * * root echo 'Cron command executed' >> /var/log/backend-cron.log
