@@ -58,6 +58,11 @@ up : volume_dirs envs hosts_up repos permissions
 dependencies :
 	# install dependencies for backend app
 	sudo docker-compose exec -T backend composer install
+	# post-install for phpmemadmin
+	sudo docker-compose exec -T phpmemadmin composer install
+	sudo docker-compose exec phpmemadmin sh -c 'sed -i "s/127.0.0.1/$$MEMCACHED_HOST/g" app/.config.dist && sed -i "s/11211/$$MEMCACHED_PORT/g" app/.config.dist'
+	sudo docker-compose stop phpmemadmin
+	sudo docker-compose up --build -d phpmemadmin
 
 nuclear : down
 	sudo rm -rf ./data ./log ./backend-app/src/Migrations/*.php
