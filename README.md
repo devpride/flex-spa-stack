@@ -1,6 +1,11 @@
-# Flex SPA stack
+# FlexSPA - dockerized single page application stack
 
-Project includes:
-- docker
-- backend app
-- frontend app
+## Getting started
+
+Just make few simple steps:
+
+```bash
+git clone https://github.com/devpride/flex-spa-stack project_name
+cd project_name
+make init
+```

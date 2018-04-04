@@ -18,7 +18,7 @@ volume_dirs :
 		log/supervisor
 
 repos :
-	@if [ ! -d backend-app ]; then git clone https://github.com/devpride/flex-spa-backend.git backend-app; fi;
+	@if [ ! -d backend-app ]; then git clone https://github.com/devpride/flex-spa-backend.git backend-app && cp ./backend-app/.env.dist ./backend-app/.env; fi;
 	@if [ ! -d frontend-app ]; then git clone https://github.com/devpride/react-universally.git frontend-app; fi;
 
 envs :
@@ -52,26 +52,22 @@ hosts_down :
 	# remove all flex-spa hosts
 	./bin/remove_host.sh flex-spa.dev
 
-up : volume_dirs envs hosts_up repos
+up : volume_dirs envs hosts_up repos permissions
 	sudo docker-compose up --build -d
 
 dependencies :
 	# install dependencies for backend app
 	sudo docker-compose exec -T backend composer install
 
-nuclear :
-	sudo docker rm $(docker ps -a -q)
-	sudo docker rmi $(docker images -q)
+nuclear : down
+	sudo rm -rf ./data ./log ./backend-app/src/Migrations/*.php
 	sudo docker volume prune
-
-clean :
-	sudo docker-compose exec backend_web rm -f src/Migrations/*.php
-	sudo docker-compose exec backend_web php bin/console doctrine:schema:drop --force
+	sudo docker rmi -f $(sudo docker-compose ps -q)
 
 data :
 	# generate db schema migration and migrate it
-#	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:diff
-#	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:migrate
+	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:diff
+	sudo docker-compose exec -T backend_web php bin/console doctrine:migrations:migrate
 	# load demo fixtures to database
 	sudo docker-compose exec -T backend_web php bin/console doctrine:fixtures:load
 	# populate mysql data to elastic indexes according to app mappings
@@ -80,14 +76,17 @@ data :
 	sudo docker-compose run --rm sentry_web upgrade
 
 tests :
-	sudo docker-compose exec -T backend php bin/phpunit
+	sudo docker-compose exec -T backend_web php bin/phpunit
 
 jwt :
-	sudo docker-compose exec backend openssl genrsa -out config/jwt/private.pem -aes256 4096
-	sudo docker-compose exec backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+	sudo docker-compose exec -T backend openssl genrsa -out config/jwt/private.pem -aes256 4096
+	sudo docker-compose exec -T backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 down : hosts_down
 	sudo docker-compose down
+
+permissions :
+	sudo chmod -R 777 ./backend-app/
 
 re :
 	sudo docker-compose stop $(C)
@@ -99,4 +98,6 @@ shell :
 tail :
 	sudo docker-compose logs -f $(C)
 
-.PHONY: volume_dirs repos envs hosts_up hosts_down up data down shell tail
+init : up dependencies jwt data tests
+
+.PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies nuclear data tests jwt down permissions re shell tail
