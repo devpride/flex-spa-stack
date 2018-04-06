@@ -6,7 +6,7 @@
 - [Lifecycle](#lifecycle)
 - [Service list](#service-list)
     - [Main services](#main-services)
-    - [Internal service endpoints](#internal-service-enpoints)
+    - [Internal service endpoints](#internal-service-endpoints)
 - [Roadmap](#roadmap)
 - [Docs](#docs)
 - [Contributing](#contributing)
