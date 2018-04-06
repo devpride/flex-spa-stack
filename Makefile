@@ -41,6 +41,7 @@ hosts_up :
 	./bin/add_host.sh 127.0.0.1 redis.flex-spa.dev
 	./bin/add_host.sh 127.0.0.1 memcached.flex-spa.dev
 	./bin/add_host.sh 127.0.0.1 statsd.flex-spa.dev
+	./bin/add_host.sh 127.0.0.1 graphite.flex-spa.dev
 	./bin/add_host.sh 127.0.0.1 elasticsearch.flex-spa.dev
 	./bin/add_host.sh 127.0.0.1 rabbitmq.flex-spa.dev
 	./bin/add_host.sh 127.0.0.1 memcached.sentry.flex-spa.dev
