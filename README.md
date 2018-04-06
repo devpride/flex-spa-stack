@@ -26,57 +26,26 @@ Installation step will trigger some interactive prompt questions on which you mu
 Some of them:
 
 ```bash
-> Clickalicious\PhpMemAdmin\Installer::postInstall
-Installer
-
-Flags
-  --verbose, -v  Turn on verbose output
-  --version, -V  Display the version
-  --quiet, -q    Disable all output
-  --help, -h     Show this help screen
-
-+----------------------------------------------------------------------+
-| Installer                                                            |
-| Version: $Id: 1479a0ed10f3f7489a0e9308c3046d7b397e5ab7 $             |
-+----------------------------------------------------------------------+
-  1. Install phpMemAdmin
-  2. Quit 
-
 Your choice: [Install phpMemAdmin]:
->> [PUSH ENTER] <<
+#>> [PUSH ENTER] <<
 
 Install to /var/www/phpmemadmin ? [Y/n]
->> [PUSH ENTER] <<
+#>> [PUSH ENTER] <<
 
-Installing ... -  (0:00, 0/s)                              
-
-Installation of phpMemAdmin was successful.
-
-...
-
-sudo docker-compose exec -T backend openssl genrsa -out config/jwt/private.pem -aes256 4096
-Generating RSA private key, 4096 bit long modulus
-...........++
-.....++
-e is 65537 (0x10001)
 Enter pass phrase for config/jwt/private.pem:
->> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
+#>> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
 
 Verifying - Enter pass phrase for config/jwt/private.pem:
->> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
+#>> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
 
-sudo docker-compose exec -T backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 Enter pass phrase for config/jwt/private.pem:
->> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
+#>> [PASTE 'API_JWT_PASSPHRASE' VALUE FROM .env FILE] <<
 
-...
-Created internal Sentry project (slug=internal, id=1)
-
-Would you like to create a user account now? [Y/n]: y
-Email: example@mail.com
-Password: *****
-Repeat for confirmation: ***** 
-Should this user be a superuser? [y/N]: y
+Would you like to create a user account now? [Y/n]: #y
+Email: #example@mail.com
+Password: #*****
+Repeat for confirmation: #***** 
+Should this user be a superuser? [y/N]: #y
 ```
 
 Now go to http://sentry.flex-spa.dev:1940/ and on welcome screen put **http://sentry.flex-spa.dev:1940** as **Root URL**. Other fields and checkboxes are up to you.
