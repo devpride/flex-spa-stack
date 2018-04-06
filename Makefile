@@ -4,7 +4,7 @@
 OK_COLOR=\033[32;01m
 NO_COLOR=\033[0m
 
-#commands
+# commands
 volume_dirs :
 	sudo mkdir -p \
 		data/grafana \
@@ -67,7 +67,6 @@ dependencies :
 nuclear : down
 	sudo rm -rf ./data ./log ./backend-app/src/Migrations/*.php
 	sudo docker volume prune
-	sudo docker rmi -f $(sudo docker-compose ps -q)
 
 data :
 	# generate db schema migration and migrate it
@@ -77,7 +76,7 @@ data :
 	sudo docker-compose exec -T backend_web php bin/console doctrine:fixtures:load
 	# populate mysql data to elastic indexes according to app mappings
 	sudo docker-compose exec -T backend_web php bin/console fos:elastica:populate
-	#init sentry db
+	# init sentry db
 	sudo docker-compose run --rm sentry_web upgrade
 
 tests :
@@ -103,6 +102,6 @@ shell :
 tail :
 	sudo docker-compose logs -f $(C)
 
-init : up dependencies jwt data tests
+install : up dependencies jwt data tests
 
-.PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies nuclear data tests jwt down permissions re shell tail
+.PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies nuclear data tests jwt down permissions re shell tail install
