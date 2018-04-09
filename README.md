@@ -48,7 +48,7 @@ Repeat for confirmation: #*****
 Should this user be a superuser? [y/N]: #y
 ```
 
-Now go to http://sentry.flex-spa.dev:1940/ and on welcome screen put **http://sentry.flex-spa.dev:1940** as **Root URL**. Other fields and checkboxes are up to you.
+Now go to http://sentry.flex-spa.dev:1940/ and on welcome screen put *http://sentry.flex-spa.dev:9000* as **Root URL**. Other fields and checkboxes are up to you.
 
 Go to http://sentry.flex-spa.dev:1940/sentry/internal/settings/keys/, copy **DSN** and put it to your .env as **SENTRY_DSN** value.
 

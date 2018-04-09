@@ -103,6 +103,6 @@ shell :
 tail :
 	sudo docker-compose logs -f $(C)
 
-install : up dependencies jwt data tests
+install : up dependencies jwt data permissions tests
 
 .PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies nuclear data tests jwt down permissions re shell tail install

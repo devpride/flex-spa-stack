@@ -26,6 +26,7 @@ services:
       MAILER_URL: ${MAILER_URL}
       SENTRY_DSN: ${SENTRY_DSN}
       API_JWT_PASSPHRASE: ${API_JWT_PASSPHRASE}
+    command: bash -c 'echo SKIP'
 
   backend_web:
     restart: unless-stopped
@@ -53,9 +54,11 @@ services:
       - memcached:${MEMCACHED_HOST}
       - elasticsearch:${ELASTICSEARCH_HOST}
       - rabbitmq:${RABBITMQ_HOST}
+      - sentry_web:${SENTRY_HOST}
     volumes:
       - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
       - ./log/supervisor:/var/log/supervisor
+#    command: php-fpm
     command: bash -c 'cp /var/www/flex-spa/backend-app/config/workers/* /etc/supervisord/ && supervisord'
 
   backend_cron:
@@ -66,6 +69,7 @@ services:
       - redis:${REDIS_HOST}
       - memcached:${MEMCACHED_HOST}
       - elasticsearch:${ELASTICSEARCH_HOST}
+      - sentry_web:${SENTRY_HOST}
     volumes:
       - ${BACKEND_PATH}:/var/www/flex-spa/backend-app
       - ./log/cron:/var/log
