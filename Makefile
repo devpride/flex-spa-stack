@@ -53,12 +53,14 @@ hosts_down :
 	# remove all flex-spa hosts
 	./bin/remove_host.sh flex-spa.dev
 
-up : volume_dirs envs hosts_up repos permissions
+up : volume_dirs envs hosts_up repos dependencies permissions
 	sudo docker-compose up --build -d
 
 dependencies :
 	# install dependencies for backend app
-	sudo docker-compose exec -T backend composer install
+	sudo docker-compose exec -T backend_web composer install
+
+phpmemadmin :
 	# post-install for phpmemadmin
 	sudo docker-compose exec -T phpmemadmin composer install
 	sudo docker-compose exec phpmemadmin sh -c 'sed -i "s/127.0.0.1/$$MEMCACHED_HOST/g" app/.config.dist && sed -i "s/11211/$$MEMCACHED_PORT/g" app/.config.dist'
@@ -103,6 +105,6 @@ shell :
 tail :
 	sudo docker-compose logs -f $(C)
 
-install : up dependencies jwt data permissions tests
+install : up dependencies phpmemadmin jwt data permissions tests
 
-.PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies nuclear data tests jwt down permissions re shell tail install
+.PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies phpmemadmin nuclear data tests jwt down permissions re shell tail install
