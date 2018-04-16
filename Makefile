@@ -94,6 +94,8 @@ down : hosts_down
 
 permissions :
 	sudo chmod -R 777 ./backend-app/
+	sudo chmod -R 777 ./data/
+	sudo chmod -R 777 ./log/
 
 re :
 	sudo docker-compose stop $(C)
@@ -105,6 +107,6 @@ shell :
 tail :
 	sudo docker-compose logs -f $(C)
 
-install : up dependencies phpmemadmin jwt data permissions tests
+install : up dependencies phpmemadmin jwt permissions data tests
 
 .PHONY: volume_dirs repos envs hosts_up hosts_down up dependencies phpmemadmin nuclear data tests jwt down permissions re shell tail install
