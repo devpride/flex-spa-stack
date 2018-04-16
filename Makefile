@@ -53,7 +53,7 @@ hosts_down :
 	# remove all flex-spa hosts
 	./bin/remove_host.sh flex-spa.dev
 
-up : volume_dirs envs hosts_up repos dependencies permissions
+up : volume_dirs envs hosts_up repos permissions
 	sudo docker-compose up --build -d
 
 dependencies :
