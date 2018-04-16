@@ -86,8 +86,8 @@ tests :
 	sudo docker-compose exec -T backend_web php bin/phpunit
 
 jwt :
-	sudo docker-compose exec -T backend openssl genrsa -out config/jwt/private.pem -aes256 4096
-	sudo docker-compose exec -T backend openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+	sudo docker-compose exec -T backend_web openssl genrsa -out config/jwt/private.pem -aes256 4096
+	sudo docker-compose exec -T backend_web openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 down : hosts_down
 	sudo docker-compose down
