@@ -118,6 +118,8 @@ services:
 
   elasticsearch:
     image: elasticsearch:alpine
+    environment:
+      ES_JAVA_OPTS: "-Xms768m -Xmx768m"
     ports:
       - ${ELASTICSEARCH_PORT}:9200
       - 9300:9300 #node communication
